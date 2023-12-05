@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_night_app/models/movie_session_provider.dart';
+import 'package:movie_night_app/provider/movie_session_provider.dart';
 import 'package:provider/provider.dart';
 
 class HostSessionPage extends StatefulWidget {
@@ -20,7 +20,16 @@ class _HostSessionPageState extends State<HostSessionPage> {
         body: Column(
           children: [
             const Text("Host Session Page"),
-            Text("${movieSessionProvider.deviceId}")
+            Text("device id: ${movieSessionProvider.deviceId}"),
+            Text(
+                "host session id: ${movieSessionProvider.hostSessionInfo!.sessionId}"),
+            Text(
+                "host session code: ${movieSessionProvider.hostSessionInfo!.code}"),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/vote');
+                },
+                child: child)
           ],
         ),
       ),

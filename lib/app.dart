@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
         "/welcome": (BuildContext context) => const WelcomePage(),
         '/host': (BuildContext context) => const HostSessionPage(),
         '/join': (BuildContext context) => const JoinSessionPage(),
-        '/movies': (BuildContext context) => const MovieSwipePage(),
+        '/vote': (BuildContext context) => const MovieSwipePage(),
       },
     );
   }

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:movie_night_app/models/movie_session_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:movie_night_app/provider/movie_session_provider.dart';
+import 'package:movie_night_app/data/http_helper.dart';
+import 'package:movie_night_app/data/models/session_api_model.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({Key? key}) : super(key: key);
+
+//host: {data: {message: new session created., code: 9902, session_id: 0e40349e-3aab-4183-844a-63bc2a640bd5}}
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +22,17 @@ class WelcomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              //HOSTING A SESSION
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/host');
+                onPressed: () async {
+                  //build and fetch
+                  try {
+                    await movieSessionProvider.setMovieNightUrl(
+                        SessionType.host, null);
+                    Navigator.pushNamed(context, '/host');
+                  } catch (e) {
+                    print("error");
+                  }
                 },
                 child: const Text('Host a Session'),
               ),
@@ -29,12 +41,6 @@ class WelcomePage extends StatelessWidget {
                   Navigator.pushNamed(context, '/join');
                 },
                 child: const Text('Join a Session'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/movies');
-                },
-                child: const Text('movies test'),
               ),
               Center(
                 child: Text(
