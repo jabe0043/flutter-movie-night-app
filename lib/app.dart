@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_night_app/pages/welcome_page.dart';
 import 'package:movie_night_app/pages/host_session_page.dart';
 import 'package:movie_night_app/pages/join_session_page.dart';
-import 'package:movie_night_app/pages/movie_swipe_page.dart';
+import 'package:movie_night_app/pages/vote_page.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
         "/welcome": (BuildContext context) => const WelcomePage(),
         '/host': (BuildContext context) => const HostSessionPage(),
         '/join': (BuildContext context) => const JoinSessionPage(),
-        '/vote': (BuildContext context) => const MovieSwipePage(),
+        '/vote': (BuildContext context) => const VotePage(),
       },
     );
   }

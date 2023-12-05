@@ -65,6 +65,13 @@ class JoinSessionFormState extends State<JoinSessionForm> {
     super.dispose();
   }
 
+//SNACKBAR  TODO:Add enum for success/error
+  tellUser(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -93,11 +100,8 @@ class JoinSessionFormState extends State<JoinSessionForm> {
                       SessionType.guest, sessionCode);
                   Navigator.pushNamed(context, '/vote');
                 } catch (e) {
-                  print("error");
+                  tellUser("Invalid code");
                 }
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Data')),
-                );
               }
             },
             child: const Text('Submit'),

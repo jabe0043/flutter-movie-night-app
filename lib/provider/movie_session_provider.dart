@@ -48,7 +48,6 @@ class MovieSessionProvider extends ChangeNotifier {
         await setSessionInfo(SessionType.guest);
       // case SessionType.vote:
     }
-    print("Provider -- TYPE:$sessionType. MovieNight url: $movieNightUrl");
     notifyListeners();
   }
 
@@ -61,15 +60,20 @@ class MovieSessionProvider extends ChangeNotifier {
         case SessionType.host:
           HostSession modeledData = HostSession.fromJson(data);
           _hostSessionInfo = modeledData;
+
         case SessionType.guest:
           GuestSession modeledData = GuestSession.fromJson(data);
-          _guestSessionInfo = modeledData;
+          if (modeledData.sessionId == "") {
+            throw Exception("Invalid code");
+          } else {
+            _guestSessionInfo = modeledData;
+          }
       }
       print(
-          "provider -- $sessionType. Code: ${_hostSessionInfo!.code}, id:${_hostSessionInfo!.sessionId}");
+          '$sessionType, session id: ${sessionType == SessionType.host ? "${_hostSessionInfo!.sessionId} CODE: ${_hostSessionInfo!.code}" : _guestSessionInfo?.sessionId}');
       notifyListeners();
     } catch (e) {
-      print("Error setting SessionId: $e");
+      throw Exception("Error setting session info:");
     }
   }
 }

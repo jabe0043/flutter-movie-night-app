@@ -6,15 +6,15 @@ class HostSession {
 
   HostSession.fromJson(Map<String, dynamic> res) {
     message = res['data']['message'];
-    code = res['data']['code'];
     sessionId = res['data']['session_id'];
+    code = res['data']['code'];
   }
 }
 
 //join session
 class GuestSession {
   late String message;
-  late String sessionId;
+  late String? sessionId;
 
   GuestSession.fromJson(Map<String, dynamic> res) {
     message = res['data']['message'];
