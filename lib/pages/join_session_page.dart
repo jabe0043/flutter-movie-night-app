@@ -23,7 +23,7 @@ class _JoinSessionPageState extends State<JoinSessionPage> {
             const Text("Join Session Page"),
             Text("${movieSessionProvider.deviceId}"), //checking for context
             Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Container(
                 child:
                     JoinSessionForm(movieSessionProvider: movieSessionProvider),
@@ -139,7 +139,7 @@ class JoinSessionFormState extends State<JoinSessionForm> {
             fontSize: 0,
           ),
         ),
-        style: Theme.of(context).textTheme.headline6,
+        style: Theme.of(context).textTheme.titleLarge,
         keyboardType: TextInputType.number,
         textAlign: TextAlign.center,
         inputFormatters: [

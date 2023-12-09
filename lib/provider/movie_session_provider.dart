@@ -18,13 +18,13 @@ class MovieSessionProvider extends ChangeNotifier {
   String? _deviceId;
   HostSession? _hostSessionInfo;
   GuestSession? _guestSessionInfo;
-  VoteMatch? _voteSession;
+  VoteMatch? _voteResult;
 
 //getters
   String? get deviceId => _deviceId;
   HostSession? get hostSessionInfo => _hostSessionInfo;
   GuestSession? get guestSessionInfo => _guestSessionInfo;
-  VoteMatch? get voteSession => _voteSession;
+  VoteMatch? get voteResult => _voteResult;
 
 //set device id
   Future<void> userDeviceId() async {
@@ -52,9 +52,8 @@ class MovieSessionProvider extends ChangeNotifier {
       case SessionType.vote:
         movieNightUrl =
             '$baseUrl/vote-movie?session_id=${hostSessionInfo?.sessionId ?? guestSessionInfo?.sessionId}&movie_id=$movieId&vote=$vote';
-        print("Session Provider VOTE URL: $movieNightUrl");
+        await setSessionInfo(SessionType.vote);
         break;
-      // movieNightUrl = '$baseUrl/vote-movie?movie_id=${voteInfo}';
     }
     notifyListeners();
   }
@@ -68,6 +67,7 @@ class MovieSessionProvider extends ChangeNotifier {
         case SessionType.host:
           HostSession modeledData = HostSession.fromJson(data);
           _hostSessionInfo = modeledData;
+          break;
 
         case SessionType.guest:
           GuestSession modeledData = GuestSession.fromJson(data);
@@ -76,12 +76,18 @@ class MovieSessionProvider extends ChangeNotifier {
           } else {
             _guestSessionInfo = modeledData;
           }
+          break;
+
+        case SessionType.vote:
+          VoteMatch modeledData = VoteMatch.fromJson(data);
+          print(
+              "Vote placed message:${modeledData.message} MATCH:${modeledData.match}");
+          _voteResult = modeledData;
+          break;
       }
-      print(
-          '$sessionType, session id: ${sessionType == SessionType.host ? "${_hostSessionInfo!.sessionId} CODE: ${_hostSessionInfo!.code}" : _guestSessionInfo?.sessionId}');
       notifyListeners();
     } catch (e) {
-      throw Exception("Error setting session info:");
+      throw Exception("Error setting session info: $e");
     }
   }
 }

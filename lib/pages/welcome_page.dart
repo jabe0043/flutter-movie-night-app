@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:movie_night_app/provider/movie_session_provider.dart';
-import 'package:movie_night_app/data/http_helper.dart';
-import 'package:movie_night_app/data/models/session_api_model.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({Key? key}) : super(key: key);

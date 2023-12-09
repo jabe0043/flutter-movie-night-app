@@ -30,7 +30,7 @@ class VoteMatch {
 
   VoteMatch.fromJson(Map<String, dynamic> res) {
     message = res['data']['message'];
-    movieId = res['data']['movie_id'];
+    movieId = int.parse(res['data']['movie_id'].toString());
     match = res['data']['match'];
   }
 }

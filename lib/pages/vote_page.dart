@@ -22,7 +22,6 @@ class _VotePageState extends State<VotePage> {
 
   String url(page) => "$baseUrl&api_key=$_apiKey&page=$page";
   String imagePath(path) => 'https://image.tmdb.org/t/p/w500/$path';
-  Map<String, dynamic>? voteInfo;
 
   @override
   void initState() {
@@ -82,32 +81,37 @@ class _VotePageState extends State<VotePage> {
   Widget _movieCard(MovieSessionProvider movieSessionProvider, Movie movie) {
     var movieImage = imagePath(movie.posterPath);
 
-    _handleSwipe(Movie movie, bool vote) {
-      setState(() {
-        voteInfo = {"movieId": movie.id, "vote": vote};
-        print(voteInfo);
-        if (vote) {
-          print("VOTED YES -- ${movie.title}");
-        } else {
-          print("VOTED NO -- ${movie.title}");
-        }
-        movieSessionProvider.setMovieNightUrl(
-            SessionType.vote, null, movie.id, vote);
-        votedMovies.add(movie);
-        print("voted on a total of: ${votedMovies.length}");
-        _currentIndex++;
-        if (_currentIndex % 20 == 0) {
-          _currentIndex = 0;
-          fetchData(url(page));
-        }
-      });
+    handleSwipe(Movie movie, bool vote) async {
+      await movieSessionProvider.setMovieNightUrl(
+          SessionType.vote, null, movie.id, vote);
+      var voteResult = movieSessionProvider.voteResult?.match;
+
+      setState(
+        () {
+          switch (voteResult) {
+            case true:
+              print("There was a match!: $voteResult");
+              break;
+            case false:
+              print("Not a match!: $voteResult");
+              break;
+            default:
+              break;
+          }
+          votedMovies.add(movie);
+          _currentIndex++;
+          if (_currentIndex % 20 == 0) {
+            _currentIndex = 0;
+            fetchData(url(page));
+          }
+        },
+      );
     }
 
     return Dismissible(
       key: ValueKey<int>(movie.id),
       onDismissed: (DismissDirection direction) {
-        print("${movie.title} was voted: $direction");
-        _handleSwipe(movie, direction == DismissDirection.endToStart);
+        handleSwipe(movie, direction == DismissDirection.endToStart);
       },
       child: Card(
         elevation: 40,
