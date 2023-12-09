@@ -28,7 +28,7 @@ class WelcomePage extends StatelessWidget {
                   //build and fetch
                   try {
                     await movieSessionProvider.setMovieNightUrl(
-                        SessionType.host, null);
+                        SessionType.host, null, null, null);
                     Navigator.pushNamed(context, '/host');
                   } catch (e) {
                     print("error");

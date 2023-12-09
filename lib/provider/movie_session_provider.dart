@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'dart:async';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:movie_night_app/data/models/session_api_model.dart';
@@ -20,11 +18,13 @@ class MovieSessionProvider extends ChangeNotifier {
   String? _deviceId;
   HostSession? _hostSessionInfo;
   GuestSession? _guestSessionInfo;
+  VoteMatch? _voteSession;
 
 //getters
   String? get deviceId => _deviceId;
   HostSession? get hostSessionInfo => _hostSessionInfo;
   GuestSession? get guestSessionInfo => _guestSessionInfo;
+  VoteMatch? get voteSession => _voteSession;
 
 //set device id
   Future<void> userDeviceId() async {
@@ -37,16 +37,24 @@ class MovieSessionProvider extends ChangeNotifier {
   }
 
 // Build url and fetch
-  setMovieNightUrl(Enum sessionType, String? code) async {
-    String baseUrl = 'https://movie-night-api.onrender.com/';
+  setMovieNightUrl(
+      Enum sessionType, String? code, int? movieId, bool? vote) async {
+    String baseUrl = 'https://movie-night-api.onrender.com';
     switch (sessionType) {
       case SessionType.host:
-        movieNightUrl = '${baseUrl}start-session?device_id=$deviceId';
+        movieNightUrl = '$baseUrl/start-session?device_id=$deviceId';
         await setSessionInfo(SessionType.host);
+        break;
       case SessionType.guest:
-        movieNightUrl = '${baseUrl}join-session?device_id=$deviceId&code=$code';
+        movieNightUrl = '$baseUrl/join-session?device_id=$deviceId&code=$code';
         await setSessionInfo(SessionType.guest);
-      // case SessionType.vote:
+        break;
+      case SessionType.vote:
+        movieNightUrl =
+            '$baseUrl/vote-movie?session_id=${hostSessionInfo?.sessionId ?? guestSessionInfo?.sessionId}&movie_id=$movieId&vote=$vote';
+        print("Session Provider VOTE URL: $movieNightUrl");
+        break;
+      // movieNightUrl = '$baseUrl/vote-movie?movie_id=${voteInfo}';
     }
     notifyListeners();
   }

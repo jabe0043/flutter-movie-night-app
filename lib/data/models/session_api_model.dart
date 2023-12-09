@@ -23,12 +23,12 @@ class GuestSession {
 }
 
 //vote
-class VoteMovie {
+class VoteMatch {
   late String message;
   late int movieId;
   late bool match;
 
-  VoteMovie.fromJson(Map<String, dynamic> res) {
+  VoteMatch.fromJson(Map<String, dynamic> res) {
     message = res['data']['message'];
     movieId = res['data']['movie_id'];
     match = res['data']['match'];

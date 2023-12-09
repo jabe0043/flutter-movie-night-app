@@ -36,7 +36,7 @@ class _JoinSessionPageState extends State<JoinSessionPage> {
   }
 }
 
-// Create a Form widget.
+// Code input form
 class JoinSessionForm extends StatefulWidget {
   final MovieSessionProvider movieSessionProvider;
 
@@ -97,7 +97,7 @@ class JoinSessionFormState extends State<JoinSessionForm> {
                 print('Session Code: $sessionCode');
                 try {
                   await movieSessionProvider.setMovieNightUrl(
-                      SessionType.guest, sessionCode);
+                      SessionType.guest, sessionCode, null, null);
                   Navigator.pushNamed(context, '/vote');
                 } catch (e) {
                   tellUser("Invalid code");
