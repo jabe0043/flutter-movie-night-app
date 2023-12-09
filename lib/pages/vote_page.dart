@@ -84,25 +84,30 @@ class _VotePageState extends State<VotePage> {
     handleSwipe(Movie movie, bool vote) async {
       await movieSessionProvider.setMovieNightUrl(
           SessionType.vote, null, movie.id, vote);
-      var voteResult = movieSessionProvider.voteResult?.match;
+      var voteResult = movieSessionProvider.voteResult;
 
       setState(
         () {
-          switch (voteResult) {
+          votedMovies.add(movie);
+          _currentIndex++;
+          if (_currentIndex % 20 == 0) {
+            _currentIndex = 0;
+            fetchData(url(page));
+          }
+          //should switch go under the other code?
+          switch (voteResult?.match) {
             case true:
-              print("There was a match!: $voteResult");
+              print("There was a match!: ${voteResult?.movieId}");
+              var movieMatch = votedMovies
+                  .firstWhere((element) => element.id == voteResult?.movieId);
+              _displayBottomSheet(context, movieSessionProvider, movieMatch);
+              print("The matching movie: ${movieMatch.title}");
               break;
             case false:
               print("Not a match!: $voteResult");
               break;
             default:
               break;
-          }
-          votedMovies.add(movie);
-          _currentIndex++;
-          if (_currentIndex % 20 == 0) {
-            _currentIndex = 0;
-            fetchData(url(page));
           }
         },
       );
@@ -128,4 +133,100 @@ class _VotePageState extends State<VotePage> {
       ),
     );
   }
+
+  Future? _displayBottomSheet(
+      BuildContext context, movieSessionProvider, Movie movie) {
+    return showModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      backgroundColor: Colors.black,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
+      builder: (context) => Container(
+        height: 500,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Center(
+            child: Column(
+              children: [
+                const Text(
+                  "There was a match!",
+                  style: TextStyle(
+                    color: Colors.white, // Set the text color to white
+                  ),
+                ),
+                Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Image.network(
+                        imagePath(movie.backdropPath),
+                        fit: BoxFit.cover,
+                        height: 220, // Set the height of the image
+                      ),
+                    ),
+                    //OVERLAY
+                    Opacity(
+                      opacity: 0.5,
+                      child: Container(
+                        height: 220,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black12,
+                              Colors.black54,
+                              Colors.black54,
+                              Colors.black87,
+                              Colors.black,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  movie.title,
+                  style: const TextStyle(
+                    color: Colors.white, // Set the text color to white
+                  ),
+                ),
+                Text(
+                  movie.releaseDate,
+                  style: const TextStyle(
+                    color: Colors.white, // Set the text color to white
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () => Navigator.pushNamed(context, '/welcome'),
+                  child: const Text("Ok"),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
+
+
+
+/*
+                Container(
+                  height: 200,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xff027DFD),
+                        Color(0xff4100E0),
+                        Color(0xff1CDAC5),
+                      ],
+                    ),
+                  ),
+                ),
+
+*/
