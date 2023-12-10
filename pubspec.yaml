@@ -14,10 +14,15 @@ dependencies:
   
   provider:
   platform_device_id: ^1.0.1
+  flutter_animate: ^4.3.0
+  transparent_image: ^2.0.1
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+    
+
 
   http: ^1.1.0
 
