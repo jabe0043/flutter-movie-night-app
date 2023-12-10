@@ -10,7 +10,7 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Alignment> _bottomAlignmentAnimation;
 
@@ -18,8 +18,7 @@ class _WelcomePageState extends State<WelcomePage>
   void initState() {
     super.initState();
     _controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 4));
-
+        AnimationController(vsync: this, duration: const Duration(seconds: 5));
 //Button Gradient animations
     _bottomAlignmentAnimation = TweenSequence<Alignment>(
       [
@@ -82,8 +81,8 @@ class _WelcomePageState extends State<WelcomePage>
                     animation: _controller,
                     builder: (context, _) {
                       return Container(
-                        width: 300,
-                        height: 60,
+                        // width: 300,
+                        height: 90,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
@@ -92,17 +91,49 @@ class _WelcomePageState extends State<WelcomePage>
                             ],
                             end: _bottomAlignmentAnimation.value,
                           ),
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Center(
-                          child: Text('Host a Session'),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.sensors,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                                size: 40.0,
+                              ),
+                              const SizedBox(width: 16),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Host a Vote Session",
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground),
+                                  ),
+                                  Text(
+                                    "Share your code with friends",
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
                   ),
                 ),
 
-                const SizedBox(height: 50),
+                const SizedBox(height: 16),
 
                 //Joining a session
                 ElevatedButton(
@@ -115,8 +146,8 @@ class _WelcomePageState extends State<WelcomePage>
                     animation: _controller,
                     builder: (context, _) {
                       return Container(
-                        width: 300,
-                        height: 60,
+                        // width: 300,
+                        height: 90,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
@@ -125,10 +156,42 @@ class _WelcomePageState extends State<WelcomePage>
                             ],
                             end: _bottomAlignmentAnimation.value,
                           ),
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Center(
-                          child: Text('Join a Session'),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.connect_without_contact,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                                size: 40.0,
+                              ),
+                              const SizedBox(width: 16),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Join a Vote Session",
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground),
+                                  ),
+                                  Text(
+                                    "Enter your code and start voting",
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },

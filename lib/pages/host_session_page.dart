@@ -24,7 +24,10 @@ class _HostSessionPageState extends State<HostSessionPage> {
             Text(
                 "host session id: ${movieSessionProvider.hostSessionInfo!.sessionId}"),
             Text(
-                "host session code: ${movieSessionProvider.hostSessionInfo!.code}"),
+              "host session code: ${movieSessionProvider.hostSessionInfo!.code}",
+              style:
+                  TextStyle(color: Theme.of(context).colorScheme.onBackground),
+            ),
             ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/vote');

@@ -26,6 +26,7 @@ class _VotePageState extends State<VotePage> {
   @override
   void initState() {
     super.initState();
+    print(url(page));
     _movies = fetchData(url(page));
   }
 
@@ -152,7 +153,7 @@ class _VotePageState extends State<VotePage> {
                 const Text(
                   "There was a match!",
                   style: TextStyle(
-                    color: Colors.white, // Set the text color to white
+                    color: Colors.white,
                   ),
                 ),
                 Stack(
@@ -162,7 +163,7 @@ class _VotePageState extends State<VotePage> {
                       child: Image.network(
                         imagePath(movie.backdropPath),
                         fit: BoxFit.cover,
-                        height: 220, // Set the height of the image
+                        height: 220,
                       ),
                     ),
                     //OVERLAY
@@ -191,17 +192,19 @@ class _VotePageState extends State<VotePage> {
                 Text(
                   movie.title,
                   style: const TextStyle(
-                    color: Colors.white, // Set the text color to white
+                    color: Colors.white,
                   ),
                 ),
                 Text(
                   movie.releaseDate,
                   style: const TextStyle(
-                    color: Colors.white, // Set the text color to white
+                    color: Colors.white,
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () => Navigator.pushNamed(context, '/welcome'),
+                  onPressed: () =>
+                      //go back to welcome screen and reset nav stack
+                      Navigator.of(context).popUntil((route) => route.isFirst),
                   child: const Text("Ok"),
                 )
               ],
