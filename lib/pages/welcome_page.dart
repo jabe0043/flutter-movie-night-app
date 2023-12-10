@@ -2,51 +2,140 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:movie_night_app/provider/movie_session_provider.dart';
 
-class WelcomePage extends StatelessWidget {
+class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
 
-//host: {data: {message: new session created., code: 9902, session_id: 0e40349e-3aab-4183-844a-63bc2a640bd5}}
+  @override
+  State<WelcomePage> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Alignment> _bottomAlignmentAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 4));
+
+//Button Gradient animations
+    _bottomAlignmentAnimation = TweenSequence<Alignment>(
+      [
+        TweenSequenceItem<Alignment>(
+          tween: Tween<Alignment>(
+              begin: Alignment.centerRight, end: Alignment.center),
+          weight: 1,
+        ),
+        TweenSequenceItem<Alignment>(
+          tween: Tween<Alignment>(
+              begin: Alignment.center, end: Alignment.centerRight),
+          weight: 1,
+        ),
+        TweenSequenceItem<Alignment>(
+          tween: Tween<Alignment>(
+              begin: Alignment.centerRight, end: Alignment.center),
+          weight: 1,
+        ),
+        TweenSequenceItem<Alignment>(
+          tween: Tween<Alignment>(
+              begin: Alignment.center, end: Alignment.centerRight),
+          weight: 1,
+        ),
+      ],
+    ).animate(_controller);
+
+    _controller.repeat();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<MovieSessionProvider>(
       builder: (context, movieSessionProvider, child) => Scaffold(
         appBar: AppBar(
-          title: const Text('ReelSync'),
-        ),
+            title: const Text('ReelSync'),
+            titleTextStyle:
+                TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+            backgroundColor: Theme.of(context).colorScheme.background),
         //BODY
         body: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              //HOSTING A SESSION
-              ElevatedButton(
-                onPressed: () async {
-                  //build and fetch
-                  try {
-                    await movieSessionProvider.setMovieNightUrl(
-                        SessionType.host, null, null, null);
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      await movieSessionProvider.setMovieNightUrl(
+                          SessionType.host, null, null, null);
+                    } catch (e) {
+                      print("error");
+                    }
                     Navigator.pushNamed(context, '/host');
-                  } catch (e) {
-                    print("error");
-                  }
-                },
-                child: const Text('Host a Session'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/join');
-                },
-                child: const Text('Join a Session'),
-              ),
-              Center(
-                child: Text(
-                  "Device ID: ${movieSessionProvider.deviceId}",
-                  style: Theme.of(context).textTheme.bodySmall,
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                  ),
+                  child: AnimatedBuilder(
+                    animation: _controller,
+                    builder: (context, _) {
+                      return Container(
+                        width: 300,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Theme.of(context).colorScheme.onPrimary,
+                              Theme.of(context).colorScheme.error,
+                            ],
+                            end: _bottomAlignmentAnimation.value,
+                          ),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: const Center(
+                          child: Text('Host a Session'),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+
+                const SizedBox(height: 50),
+
+                //Joining a session
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/join');
+                  },
+                  style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(0)),
+                  child: AnimatedBuilder(
+                    animation: _controller,
+                    builder: (context, _) {
+                      return Container(
+                        width: 300,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Theme.of(context).colorScheme.tertiary,
+                              Theme.of(context).colorScheme.onTertiary,
+                            ],
+                            end: _bottomAlignmentAnimation.value,
+                          ),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: const Center(
+                          child: Text('Join a Session'),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

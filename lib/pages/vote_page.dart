@@ -142,7 +142,7 @@ class _VotePageState extends State<VotePage> {
       backgroundColor: Colors.black,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
-      builder: (context) => Container(
+      builder: (context) => SizedBox(
         height: 500,
         child: Padding(
           padding: const EdgeInsets.all(12),
