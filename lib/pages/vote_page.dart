@@ -43,7 +43,7 @@ class _VotePageState extends State<VotePage> {
       });
       return movies;
     } catch (e) {
-      print("Error fetching data: $e"); //TODO: show toast
+      print("Error fetching data: $e");
       return [];
     }
   }
@@ -117,8 +117,13 @@ class _VotePageState extends State<VotePage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Popular Movies"),
-        Spacer(),
+        Row(
+          children: [
+            Text("Popular Movies",
+                style: Theme.of(context).textTheme.titleLarge),
+          ],
+        ),
+        const Spacer(),
         Dismissible(
           key: ValueKey<int>(movie.id),
           onDismissed: (DismissDirection direction) {
@@ -131,7 +136,7 @@ class _VotePageState extends State<VotePage> {
               .fade(duration: 250.ms)
               .slide(curve: Curves.easeInOut),
         ),
-        Spacer(),
+        const Spacer(),
       ],
     );
   }
@@ -181,59 +186,70 @@ class _VotePageState extends State<VotePage> {
 // Styling for the movie info inside the card
   Widget _movieData(Movie movie) {
     return Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            //moves my movie info to the bottom of the card
-            const SizedBox(height: 325),
-            Row(
-              children: [
-                Expanded(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          const SizedBox(height: 325),
+          Row(
+            children: [
+              Expanded(
                   child: Text(
-                    movie.title,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
-                    ),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  )
-                      .animate()
-                      .fade(duration: 250.ms, delay: 250.ms)
-                      .slide(curve: Curves.easeIn),
+                movie.title,
+                style: Theme.of(context).textTheme.headlineSmall,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              )),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    borderRadius: BorderRadius.circular(20)),
+                child: Text(
+                  movie.voteAverage.toStringAsFixed(1).toString(),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Text(
-                    movie.voteAverage.toStringAsFixed(1).toString(),
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onBackground),
-                  ),
-                )
-                    .animate()
-                    .fade(duration: 250.ms, delay: 250.ms)
-                    .slide(curve: Curves.easeIn),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    movie.releaseDate,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onBackground),
-                  )
-                      .animate()
-                      .fade(duration: 250.ms, delay: 250.ms)
-                      .slide(curve: Curves.easeIn),
-                ),
-              ],
-            )
-          ],
-        ));
+              )
+            ],
+          ),
+          const SizedBox(height: 8),
+          Divider(
+            height: .75,
+            thickness: .75,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              cardDetails("Released", movie.releaseDate),
+              cardDetails("Popularity", movie.popularity.round().toString()),
+              cardDetails("Votes", movie.voteCount.round().toString())
+            ],
+          )
+        ],
+      )
+          .animate()
+          .fade(duration: 250.ms, delay: 150.ms)
+          .slide(curve: Curves.easeInOut),
+    );
+  }
+
+//Vote count, release date, popularity..
+  Widget cardDetails(String detailTitle, String detail) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          detailTitle,
+          style: Theme.of(context).textTheme.labelSmall,
+        ),
+        Text(
+          detail,
+          style: Theme.of(context).textTheme.labelMedium,
+        )
+      ],
+    );
   }
 
 // display movie match bottom sheet
@@ -300,28 +316,19 @@ class _VotePageState extends State<VotePage> {
                         child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          movie.title,
-                          maxLines: 4,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                          ),
-                        ),
+                        Text("Match!",
+                            style: Theme.of(context).textTheme.labelMedium),
+                        Text(movie.title,
+                            maxLines: 5,
+                            style: Theme.of(context).textTheme.headlineMedium),
                         const SizedBox(height: 8),
-                        const Divider(
-                          height: .5,
-                          thickness: .5,
-                          color: Colors.white,
-                        ),
+                        Divider(
+                            height: .75,
+                            thickness: .75,
+                            color: Theme.of(context).colorScheme.onSurface),
                         const SizedBox(height: 8),
-                        Text(
-                          movie.releaseDate,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
+                        Text(movie.releaseDate,
+                            style: Theme.of(context).textTheme.labelMedium),
                       ],
                     )),
                   ],
@@ -331,10 +338,9 @@ class _VotePageState extends State<VotePage> {
                   onPressed: () =>
                       Navigator.of(context).popUntil((route) => route.isFirst),
                   btnText: "Ok",
-                  btnTextColor: Theme.of(context).colorScheme.onBackground,
                   gradientColors: [
                     Theme.of(context).colorScheme.onPrimary,
-                    Theme.of(context).colorScheme.error,
+                    Theme.of(context).colorScheme.primary,
                   ],
                 ),
                 const Spacer(),

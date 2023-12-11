@@ -1,0 +1,37 @@
+import 'package:flutter/material.dart';
+
+const darkColorScheme = ColorScheme(
+  brightness: Brightness.dark,
+  // primary: Color(0xFFFFB77D),
+  primary: Color(0xCCFFB77D),
+  onPrimary: Color(0xFF4D2600),
+  primaryContainer: Color(0xFF6E3900),
+  onPrimaryContainer: Color(0xFFFFDCC3),
+  secondary: Color(0xFFE3C0A6),
+  onSecondary: Color(0xFF422C1A),
+  secondaryContainer: Color(0xFF5A422E),
+  onSecondaryContainer: Color(0xFFFFDCC3),
+  tertiary: Color(0xFF7F8B9D), // A cool-toned light gray
+  onTertiary: Color(0xFF283040), // A dark gray
+  tertiaryContainer: Color(0xFF454A21),
+  onTertiaryContainer: Color(0xFFE1E7B0),
+  error: Color(0xFFFFB4AB),
+  errorContainer: Color(0xFF93000A),
+  onError: Color(0xFF690005),
+  onErrorContainer: Color(0xFFFFDAD6),
+  // background: Color(0xFF201B17),
+  background: Color(0xFF121212),
+  onBackground: Color(0xFFECE0DA),
+  surface: Color(0xFF201B17),
+  onSurface: Color(0xFFECE0DA),
+  surfaceVariant: Color(0xFF51443B),
+  onSurfaceVariant: Color(0xFFD6C3B6),
+  outline: Color(0xFF9E8E82),
+  onInverseSurface: Color(0xFF201B17),
+  inverseSurface: Color(0xFFECE0DA),
+  inversePrimary: Color(0xFF904D00),
+  shadow: Color(0xFF000000),
+  surfaceTint: Color(0xFFFFB77D),
+  outlineVariant: Color(0xFF51443B),
+  scrim: Color(0xFF000000),
+);

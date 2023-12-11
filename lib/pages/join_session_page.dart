@@ -34,7 +34,7 @@ class _JoinSessionPageState extends State<JoinSessionPage> {
   }
 }
 
-// Code input form
+// Single digit input form
 class JoinSessionForm extends StatefulWidget {
   final MovieSessionProvider movieSessionProvider;
 
@@ -75,8 +75,7 @@ class JoinSessionFormState extends State<JoinSessionForm>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg,
-            style:
-                TextStyle(color: Theme.of(context).colorScheme.onBackground)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onError)),
         backgroundColor: Theme.of(context).colorScheme.error,
       ),
     );
@@ -97,7 +96,7 @@ class JoinSessionFormState extends State<JoinSessionForm>
         tellUser("Invalid code");
       }
     } else {
-      tellUser("Missing digits");
+      tellUser("Incomplete code");
     }
   }
 
@@ -118,15 +117,14 @@ class JoinSessionFormState extends State<JoinSessionForm>
                 height: 250,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
+                  color: Theme.of(context).colorScheme.onTertiary,
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                 ),
                 child: Column(
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     Text("Enter your 4 digit code",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.tertiary)),
+                        style: Theme.of(context).textTheme.bodyLarge),
                     const Spacer(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -141,10 +139,9 @@ class JoinSessionFormState extends State<JoinSessionForm>
             GradientButton(
               onPressed: () async => await handleSubmit(),
               btnText: "Join",
-              btnTextColor: Theme.of(context).colorScheme.onBackground,
               gradientColors: [
-                Theme.of(context).colorScheme.tertiary,
                 Theme.of(context).colorScheme.onTertiary,
+                Theme.of(context).colorScheme.tertiary,
               ],
             )
           ],

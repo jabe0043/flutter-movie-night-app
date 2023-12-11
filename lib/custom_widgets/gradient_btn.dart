@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class GradientButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String btnText;
-  final Color btnTextColor;
+  // final Color btnTextColor;
   final List<Color> gradientColors;
 
   const GradientButton({
     required this.onPressed,
     required this.btnText,
-    required this.btnTextColor,
+    // required this.btnTextColor,
     required this.gradientColors,
   });
 
@@ -29,7 +29,7 @@ class GradientButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(50),
         ),
         child: Center(
-          child: Text(btnText, style: TextStyle(color: btnTextColor)),
+          child: Text(btnText, style: Theme.of(context).textTheme.titleLarge),
         ),
       ),
     );

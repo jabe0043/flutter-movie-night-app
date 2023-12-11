@@ -19,9 +19,11 @@ class _HostSessionPageState extends State<HostSessionPage> {
     return Consumer<MovieSessionProvider>(
       builder: (context, movieSessionProvider, child) => Scaffold(
         appBar: AppBar(
-            foregroundColor: Theme.of(context).colorScheme.onBackground,
-            title: const Text('ReelSync'),
-            backgroundColor: Theme.of(context).colorScheme.background),
+          foregroundColor: Theme.of(context).colorScheme.onBackground,
+          title: const Text('ReelSync'),
+          backgroundColor: Theme.of(context).colorScheme.background,
+        ),
+        //BODY
         body: Container(
           padding: const EdgeInsets.all(16),
           height: (height - padding.top - kToolbarHeight - padding.bottom),
@@ -38,11 +40,8 @@ class _HostSessionPageState extends State<HostSessionPage> {
                 child: Column(
                   children: [
                     Spacer(),
-                    Text(
-                      "Share this code with your friend",
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary),
-                    ),
+                    Text("Share this code with your friend",
+                        style: Theme.of(context).textTheme.bodyLarge),
                     Spacer(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -59,10 +58,9 @@ class _HostSessionPageState extends State<HostSessionPage> {
               GradientButton(
                 onPressed: () => Navigator.pushNamed(context, '/vote'),
                 btnText: "Start",
-                btnTextColor: Theme.of(context).colorScheme.onBackground,
                 gradientColors: [
                   Theme.of(context).colorScheme.onPrimary,
-                  Theme.of(context).colorScheme.error,
+                  Theme.of(context).colorScheme.primary,
                 ],
               )
             ],
@@ -77,7 +75,7 @@ class _HostSessionPageState extends State<HostSessionPage> {
       height: 68,
       width: 55,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onSurface,
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
       child: Center(

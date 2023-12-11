@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_night_app/theme/text_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:movie_night_app/provider/movie_session_provider.dart';
 import 'package:movie_night_app/custom_widgets/welcome_hero.dart';
@@ -20,20 +21,34 @@ class _WelcomePageState extends State<WelcomePage>
             foregroundColor: Theme.of(context).colorScheme.onBackground,
             title: const Text('ReelSync'),
             backgroundColor: Theme.of(context).colorScheme.background),
+        //BODY
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 50),
-              HeroBanner(),
-              const SizedBox(height: 100),
+              Stack(
+                children: [
+                  Transform.translate(
+                    offset: const Offset(0, 80),
+                    child: HeroBanner(),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(
+                        top: 8, left: 16, right: 16, bottom: 0),
+                    child: Text("Find your movie mate",
+                        style: textTheme.displaySmall),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 120),
               //Host Session
               AnimatedGradientBtn(
                 btnTextTitle: "Host a Vote Session",
                 btnTextSubtitle: "Share your code with friends",
                 btnIcon: Icons.sensors,
                 primaryColor: Theme.of(context).colorScheme.onPrimary,
-                secondaryColor: Theme.of(context).colorScheme.error,
+                secondaryColor: Theme.of(context).colorScheme.primary,
                 onPressed: () async {
                   try {
                     await movieSessionProvider.setMovieNightUrl(
@@ -44,14 +59,14 @@ class _WelcomePageState extends State<WelcomePage>
                   Navigator.pushNamed(context, '/host');
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               //Join Session
               AnimatedGradientBtn(
                 btnTextTitle: "Join a Vote Session",
                 btnTextSubtitle: "Enter your code and start voting",
                 btnIcon: Icons.connect_without_contact,
-                primaryColor: Theme.of(context).colorScheme.tertiary,
-                secondaryColor: Theme.of(context).colorScheme.onTertiary,
+                primaryColor: Theme.of(context).colorScheme.onTertiary,
+                secondaryColor: Theme.of(context).colorScheme.tertiary,
                 onPressed: () {
                   Navigator.pushNamed(context, '/join');
                 },
@@ -96,7 +111,7 @@ class _AnimatedGradientBtnState extends State<AnimatedGradientBtn>
   void initState() {
     super.initState();
     _controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 4));
+        AnimationController(vsync: this, duration: const Duration(seconds: 20));
 //Button Gradient animations
     _bottomAlignmentAnimation = TweenSequence<Alignment>(
       [
@@ -169,16 +184,13 @@ class _AnimatedGradientBtnState extends State<AnimatedGradientBtn>
                       children: [
                         Text(
                           widget.btnTextTitle,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
+                        const SizedBox(height: 4),
                         Text(
                           widget.btnTextSubtitle,
+                          style: Theme.of(context).textTheme.bodyMedium,
                           maxLines: 2,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
                         ),
                       ],
                     ),
