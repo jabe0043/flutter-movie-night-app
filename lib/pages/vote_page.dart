@@ -5,6 +5,7 @@ import 'package:movie_night_app/data/models/movie_model.dart';
 import 'package:movie_night_app/data/http_helper.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:movie_night_app/custom_widgets/gradient_btn.dart';
 
 class VotePage extends StatefulWidget {
   const VotePage({Key? key}) : super(key: key);
@@ -13,8 +14,7 @@ class VotePage extends StatefulWidget {
   State<VotePage> createState() => _VotePageState();
 }
 
-class _VotePageState extends State<VotePage>
-    with SingleTickerProviderStateMixin {
+class _VotePageState extends State<VotePage> {
   final String _apiKey = "9fc4a27f2f15369e443ecea3e67ea415";
   final String baseUrl =
       "https://api.themoviedb.org/3/movie/now_playing?language=en-US";
@@ -53,8 +53,9 @@ class _VotePageState extends State<VotePage>
     return Consumer<MovieSessionProvider>(
       builder: (context, movieSessionProvider, child) => Scaffold(
         appBar: AppBar(
-          title: const Text('ReelSync'),
-        ),
+            foregroundColor: Theme.of(context).colorScheme.onBackground,
+            title: const Text('ReelSync'),
+            backgroundColor: Theme.of(context).colorScheme.background),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -105,7 +106,6 @@ class _VotePageState extends State<VotePage>
               _displayBottomSheet(context, movieSessionProvider, movieMatch);
               break;
             case false:
-              print("Not a match!: $voteResult");
               break;
             default:
               break;
@@ -114,33 +114,32 @@ class _VotePageState extends State<VotePage>
       );
     }
 
-    return Dismissible(
-      key: ValueKey<int>(movie.id),
-      onDismissed: (DismissDirection direction) {
-        handleSwipe(movie, direction == DismissDirection.startToEnd);
-      },
-      //vote yes
-      background: const Icon(
-        Icons.favorite,
-        size: 250,
-      ),
-      //vote no
-      secondaryBackground: Icon(
-        Icons.heart_broken_rounded,
-        size: 250,
-        color: Theme.of(context).colorScheme.onPrimary,
-      ),
-      child: _movieCard(movie)
-          .animate()
-          .fade(duration: 250.ms)
-          .slide(curve: Curves.easeInOut),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text("Popular Movies"),
+        Spacer(),
+        Dismissible(
+          key: ValueKey<int>(movie.id),
+          onDismissed: (DismissDirection direction) {
+            handleSwipe(movie, direction == DismissDirection.startToEnd);
+          },
+          background: _swipeIcon(true),
+          secondaryBackground: _swipeIcon(false),
+          child: _movieCard(movie)
+              .animate()
+              .fade(duration: 250.ms)
+              .slide(curve: Curves.easeInOut),
+        ),
+        Spacer(),
+      ],
     );
   }
 
 //movie card
   Widget _movieCard(Movie movie) {
     var movieImage = imagePath(movie.posterPath);
-
+    print(imagePath(movie.backdropPath));
     return SizedBox(
       height: 500,
       child: Card(
@@ -150,7 +149,8 @@ class _VotePageState extends State<VotePage>
           children: [
             FadeInImage.memoryNetwork(
                 placeholder: kTransparentImage,
-                fadeInDuration: 300.ms,
+                fadeInDuration: 250.ms,
+                fadeInCurve: Curves.easeIn,
                 image: imagePath(movieImage),
                 width: 500,
                 fit: BoxFit.cover),
@@ -178,7 +178,7 @@ class _VotePageState extends State<VotePage>
     );
   }
 
-// displays the movie info (title + ratings etc.)
+// Styling for the movie info inside the card
   Widget _movieData(Movie movie) {
     return Container(
         padding: const EdgeInsets.all(16),
@@ -236,84 +236,155 @@ class _VotePageState extends State<VotePage>
         ));
   }
 
-// display movie match
+// display movie match bottom sheet
   Future? _displayBottomSheet(
       BuildContext context, movieSessionProvider, Movie movie) {
     return showModalBottomSheet(
       context: context,
       isDismissible: false,
-      backgroundColor: Colors.black,
+      enableDrag: false,
+      backgroundColor: Theme.of(context).colorScheme.background,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
       builder: (context) => SizedBox(
-        height: 500,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Center(
+        height: 400,
+        child: Container(
+          padding: EdgeInsets.zero,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Theme.of(context).colorScheme.background,
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.5), BlendMode.dstATop),
+              image: NetworkImage(
+                imagePath(movie.backdropPath),
+              ),
+            ),
+          ),
+          child: Container(
+            height: 400,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.0),
+                  Colors.black.withOpacity(0.5),
+                  Colors.black.withOpacity(0.75),
+                  Colors.black.withOpacity(1.0),
+                ],
+                stops: const [0.0, 0.25, 0.5, 1.0],
+              ),
+            ),
             child: Column(
               children: [
-                const Text(
-                  "There was a match!",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                Stack(
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: Image.network(
-                        imagePath(movie.backdropPath),
-                        fit: BoxFit.cover,
-                        height: 220,
-                      ),
-                    ),
-                    //OVERLAY
-                    Opacity(
-                      opacity: 0.5,
-                      child: Container(
-                        height: 220,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black12,
-                              Colors.black54,
-                              Colors.black54,
-                              Colors.black87,
-                              Colors.black,
-                            ],
-                          ),
+                    Container(
+                      height: 225,
+                      width: 175,
+                      padding: const EdgeInsets.only(right: 16),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          imagePath(movie.posterPath),
+                          fit: BoxFit.fitWidth,
+                          height: 220,
                         ),
                       ),
                     ),
+                    Expanded(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          movie.title,
+                          maxLines: 4,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Divider(
+                          height: .5,
+                          thickness: .5,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          movie.releaseDate,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    )),
                   ],
                 ),
-                Text(
-                  movie.title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  movie.releaseDate,
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                ElevatedButton(
+                const Spacer(),
+                GradientButton(
                   onPressed: () =>
-                      //go back to welcome screen and reset nav stack
                       Navigator.of(context).popUntil((route) => route.isFirst),
-                  child: const Text("Ok"),
-                )
+                  btnText: "Ok",
+                  btnTextColor: Theme.of(context).colorScheme.onBackground,
+                  gradientColors: [
+                    Theme.of(context).colorScheme.onPrimary,
+                    Theme.of(context).colorScheme.error,
+                  ],
+                ),
+                const Spacer(),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+//Dismissible background icon animation
+  Widget _swipeIcon(bool vote) {
+    if (vote == true) {
+      return Animate(
+        effects: const [
+          ScaleEffect(
+            duration: Duration(milliseconds: 500),
+            begin: Offset(5, 5),
+            end: Offset(7, 7),
+            curve: Curves.ease,
+          ),
+          ShimmerEffect(
+              duration: Duration(milliseconds: 600),
+              color: Colors.red,
+              curve: Curves.easeOut),
+        ],
+        child: Icon(
+          Icons.favorite_rounded,
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+      );
+    } else {
+      return Animate(
+        effects: const [
+          ScaleEffect(
+            duration: Duration(milliseconds: 500),
+            begin: Offset(7, 7),
+            end: Offset(5, 5),
+            curve: Curves.easeInOut,
+          ),
+          ShakeEffect(
+            duration: Duration(milliseconds: 1500),
+          )
+        ],
+        child: Icon(
+          Icons.heart_broken_rounded,
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+      );
+    }
   }
 }

@@ -26,8 +26,8 @@ class _MyAppState extends State<MyApp> {
           secondary: const Color(0xFF252525), //4
           onSecondary: Colors.black,
           tertiary: const Color(0xFF8BC34A),
-          onTertiary: const Color(0xFF4CAF50),
-          // onTertiary: const Color(0xFF43A047),
+          // onTertiary: const Color(0xFF4CAF50),
+          onTertiary: const Color(0xFF43A047),
           error: Colors.red,
           onError: Colors.red.shade900,
           background: const Color(0xFF121212), //2

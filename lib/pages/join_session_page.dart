@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_night_app/provider/movie_session_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:movie_night_app/custom_widgets/gradient_btn.dart';
 
 class JoinSessionPage extends StatefulWidget {
   const JoinSessionPage({Key? key}) : super(key: key);
@@ -16,8 +17,9 @@ class _JoinSessionPageState extends State<JoinSessionPage> {
     return Consumer<MovieSessionProvider>(
       builder: (context, movieSessionProvider, child) => Scaffold(
         appBar: AppBar(
-          title: const Text('ReelSync'),
-        ),
+            foregroundColor: Theme.of(context).colorScheme.onBackground,
+            title: const Text('ReelSync'),
+            backgroundColor: Theme.of(context).colorScheme.background),
         body: Column(
           children: [
             Padding(
@@ -48,11 +50,6 @@ class JoinSessionForm extends StatefulWidget {
 class JoinSessionFormState extends State<JoinSessionForm>
     with TickerProviderStateMixin {
   final MovieSessionProvider movieSessionProvider;
-  late AnimationController _animationController; //btn gradient
-  late Animation<Alignment> _bottomAlignmentAnimation; //btn gradient
-  late AnimationController iconController;
-  late Animation<double> iconAnimation;
-  bool playIconAnimation = false;
 
   JoinSessionFormState(this.movieSessionProvider);
 
@@ -60,85 +57,48 @@ class JoinSessionFormState extends State<JoinSessionForm>
   final List<TextEditingController> controllers =
       List.generate(4, (_) => TextEditingController());
 
-  // Button Gradient animations
   @override
   void initState() {
     super.initState();
-    iconController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 700));
-    iconAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(iconController);
-
-//Btn gradient
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    );
-    _bottomAlignmentAnimation = TweenSequence<Alignment>(
-      [
-        TweenSequenceItem<Alignment>(
-          tween: Tween<Alignment>(
-            begin: Alignment.centerRight,
-            end: Alignment.center,
-          ),
-          weight: 1,
-        ),
-        TweenSequenceItem<Alignment>(
-          tween: Tween<Alignment>(
-            begin: Alignment.center,
-            end: Alignment.centerRight,
-          ),
-          weight: 1,
-        ),
-        TweenSequenceItem<Alignment>(
-          tween: Tween<Alignment>(
-            begin: Alignment.centerRight,
-            end: Alignment.center,
-          ),
-          weight: 1,
-        ),
-        TweenSequenceItem<Alignment>(
-          tween: Tween<Alignment>(
-            begin: Alignment.center,
-            end: Alignment.centerRight,
-          ),
-          weight: 1,
-        ),
-      ],
-    ).animate(_animationController);
-    _animationController.repeat();
   }
 
   @override
   void dispose() {
-    _animationController.dispose(); //ANIMATION CONTROLLER rename
-    iconController.dispose();
     for (var controller in controllers) {
       controller.dispose();
     }
     super.dispose();
   }
 
-  void toggleIconAnimation() {
-    setState(() {
-      playIconAnimation = !playIconAnimation;
-      if (playIconAnimation) {
-        iconController.forward(); //play animation
-        iconController.repeat(reverse: false); //no reverse
-        Future.delayed(const Duration(milliseconds: 700), () {
-          iconController.stop(); //stop after 1s
-          playIconAnimation = !playIconAnimation; //reset state to false
-        });
-      } else {
-        return;
-      }
-    });
-  }
-
-//SNACKBAR  TODO:Add enum for success/error
+//snackbar alert
   tellUser(String msg) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg)),
+      SnackBar(
+        content: Text(msg,
+            style:
+                TextStyle(color: Theme.of(context).colorScheme.onBackground)),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      ),
     );
+  }
+
+//handle button press and navigate
+  handleSubmit() async {
+    if (_formKey.currentState!.validate()) {
+      String sessionCode = controllers
+          .map((controller) => controller.text)
+          .toList()
+          .reduce((value, element) => value + element);
+      try {
+        await movieSessionProvider.setMovieNightUrl(
+            SessionType.guest, sessionCode, null, null);
+        Navigator.pushNamed(context, '/vote');
+      } catch (e) {
+        tellUser("Invalid code");
+      }
+    } else {
+      tellUser("Missing digits");
+    }
   }
 
   @override
@@ -149,70 +109,44 @@ class JoinSessionFormState extends State<JoinSessionForm>
 
     return Form(
       key: _formKey,
-      child: Container(
+      child: SizedBox(
         height: (height - padding.top - kToolbarHeight - padding.bottom) - 80,
-        // decoration: BoxDecoration(color: Colors.red),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              height: 200,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List.generate(
-                  4,
-                  (index) => buildTextFormField(index),
+                height: 250,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
                 ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                toggleIconAnimation();
-                if (_formKey.currentState!.validate()) {
-                  String sessionCode = controllers
-                      .map((controller) => controller.text)
-                      .toList()
-                      .reduce((value, element) => value + element);
-                  try {
-                    await movieSessionProvider.setMovieNightUrl(
-                        SessionType.guest, sessionCode, null, null);
-                    //play the icon animation
-                    Future.delayed(const Duration(milliseconds: 500), () {
-                      Navigator.pushNamed(context, '/vote');
-                    });
-                  } catch (e) {
-                    tellUser("Invalid code");
-                  }
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.zero,
-              ),
-              child: AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, _) {
-                  return Container(
-                    height: 60,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Theme.of(context).colorScheme.tertiary,
-                          Theme.of(context).colorScheme.onTertiary,
-                        ],
-                        end: _bottomAlignmentAnimation.value,
+                child: Column(
+                  children: [
+                    Spacer(),
+                    Text("Enter your 4 digit code",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.tertiary)),
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: List.generate(
+                        4,
+                        (index) => buildTextFormField(index),
                       ),
-                      borderRadius: BorderRadius.circular(50),
                     ),
-                    child: Center(child: buttonText()),
-                  );
-                },
-              ),
-            ),
+                    const Spacer(),
+                  ],
+                )),
+            GradientButton(
+              onPressed: () async => await handleSubmit(),
+              btnText: "Join",
+              btnTextColor: Theme.of(context).colorScheme.onBackground,
+              gradientColors: [
+                Theme.of(context).colorScheme.tertiary,
+                Theme.of(context).colorScheme.onTertiary,
+              ],
+            )
           ],
         ),
       ),
@@ -221,11 +155,15 @@ class JoinSessionFormState extends State<JoinSessionForm>
 
   Widget buildTextFormField(int index) {
     return Container(
-      height: 68,
+      height: 65,
       width: 55,
       child: TextFormField(
-        autofocus: index == 0 ? true : false,
-        style: TextStyle(color: Theme.of(context).colorScheme.onTertiary),
+        textAlignVertical: TextAlignVertical.top,
+        autofocus: true,
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onTertiary,
+          fontSize: 30,
+        ),
         controller: controllers[index],
         onChanged: (value) {
           if (value.length == 1) {
@@ -248,7 +186,6 @@ class JoinSessionFormState extends State<JoinSessionForm>
           focusedBorder: OutlineInputBorder(
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             borderSide: BorderSide(
-              width: 1,
               color: Theme.of(context).colorScheme.onTertiary,
             ),
           ),
@@ -265,23 +202,5 @@ class JoinSessionFormState extends State<JoinSessionForm>
         ],
       ),
     );
-  }
-
-//loads Join or play animation
-  Widget buttonText() {
-    if (playIconAnimation) {
-      return AnimatedOpacity(
-        duration: const Duration(seconds: 1),
-        opacity: (playIconAnimation ? 1 : 0),
-        child: AnimatedIcon(
-          icon: AnimatedIcons.pause_play,
-          color: Theme.of(context).colorScheme.background,
-          progress: iconAnimation,
-          size: 60,
-        ),
-      );
-    } else {
-      return Text('Join');
-    }
   }
 }

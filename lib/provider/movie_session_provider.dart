@@ -80,8 +80,6 @@ class MovieSessionProvider extends ChangeNotifier {
 
         case SessionType.vote:
           VoteMatch modeledData = VoteMatch.fromJson(data);
-          print(
-              "Vote placed message:${modeledData.message} MATCH:${modeledData.match}");
           _voteResult = modeledData;
           break;
       }
