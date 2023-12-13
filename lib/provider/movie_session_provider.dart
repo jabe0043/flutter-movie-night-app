@@ -1,20 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:platform_device_id/platform_device_id.dart';
+// import 'package:platform_device_id/platform_device_id.dart';
 import 'package:movie_night_app/data/models/session_api_model.dart';
 import 'package:movie_night_app/data/http_helper.dart';
+import 'package:movie_night_app/data/models/device_info_model.dart';
 
 enum SessionType { host, guest, vote }
 
 class MovieSessionProvider extends ChangeNotifier {
-  static String? movieNightUrl; //public
-  String? _deviceId;
-  HostSession? _hostSessionInfo;
-  GuestSession? _guestSessionInfo;
-  VoteMatch? _voteResult;
+  Map<String, dynamic>? _deviceInfo; //the device info object
+  String? _deviceId; //extracted id value from ^
+  HostSession? _hostSessionInfo; //holds host session resp obj
+  GuestSession? _guestSessionInfo; //holds guest session resp obj
+  VoteMatch? _voteResult; //holds vote response obj
+  static String? movieNightUrl; //url for host || guest || vote
 
 //getters
+  Map<String, dynamic>? get deviceInfo => _deviceInfo;
   String? get deviceId => _deviceId;
   HostSession? get hostSessionInfo => _hostSessionInfo;
   GuestSession? get guestSessionInfo => _guestSessionInfo;
@@ -23,10 +26,17 @@ class MovieSessionProvider extends ChangeNotifier {
 //set device id
   Future<void> userDeviceId() async {
     try {
-      _deviceId = await PlatformDeviceId.getDeviceId;
-      print(_deviceId);
-    } on Exception catch (_) {
-      _deviceId = "Device id Not Found";
+      DeviceInfo deviceInfo = DeviceInfo(); //initialize my DeviceInfo class
+      await deviceInfo.initPlatformState(); //get device info from ^
+      _deviceInfo = deviceInfo.deviceInfo; //set device info
+
+      if (_deviceInfo?["model"] == "iPhone") {
+        _deviceId = _deviceInfo?["identifierForVendor"];
+      } else {
+        _deviceId = _deviceInfo?["id"];
+      }
+    } catch (_) {
+      throw Exception("Cannot get device data.");
     }
     notifyListeners();
   }
@@ -37,12 +47,12 @@ class MovieSessionProvider extends ChangeNotifier {
     String baseUrl = 'https://movie-night-api.onrender.com';
     switch (sessionType) {
       case SessionType.host:
-        _guestSessionInfo = null; //TODO: DEBUG TEST
+        _guestSessionInfo = null;
         movieNightUrl = '$baseUrl/start-session?device_id=$deviceId';
         await setSessionInfo(SessionType.host);
         break;
       case SessionType.guest:
-        _hostSessionInfo = null; //TODO: DEBUG TEST
+        _hostSessionInfo = null;
         movieNightUrl = '$baseUrl/join-session?device_id=$deviceId&code=$code';
         await setSessionInfo(SessionType.guest);
         break;
@@ -76,7 +86,6 @@ class MovieSessionProvider extends ChangeNotifier {
           break;
         case SessionType.vote:
           VoteMatch modeledData = VoteMatch.fromJson(data);
-          print(data);
           _voteResult = modeledData;
           break;
       }
