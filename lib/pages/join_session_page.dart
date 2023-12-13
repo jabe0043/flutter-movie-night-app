@@ -20,14 +20,21 @@ class _JoinSessionPageState extends State<JoinSessionPage> {
             foregroundColor: Theme.of(context).colorScheme.onBackground,
             title: const Text('ReelSync'),
             backgroundColor: Theme.of(context).colorScheme.background),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child:
-                  JoinSessionForm(movieSessionProvider: movieSessionProvider),
-            ),
-          ],
+        // body: Column(
+        //   children: [
+        //     Padding(
+        //       padding: const EdgeInsets.all(16.0),
+        //       child:
+        //           JoinSessionForm(movieSessionProvider: movieSessionProvider),
+        //     ),
+        //   ],
+        // ),
+        body: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: JoinSessionForm(movieSessionProvider: movieSessionProvider),
+          ),
         ),
       ),
     );
