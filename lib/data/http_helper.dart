@@ -10,7 +10,7 @@ enum API {
 //change to include model as a param (host, join, vote, tmdb)
 class HttpHelper {
   Future<dynamic> fetch(String url) async {
-    // print("fetching $url");
+    print("fetching..., $url");
     Uri uri = Uri.parse(url);
     http.Response res = await http.get(uri);
     if (res.statusCode == 200) {

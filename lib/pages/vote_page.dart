@@ -90,6 +90,7 @@ class _VotePageState extends State<VotePage> {
       await movieSessionProvider.setMovieNightUrl(
           SessionType.vote, null, movie.id, vote);
       var voteResult = movieSessionProvider.voteResult;
+      bool isMatch = voteResult?.match == true ? true : false;
       setState(
         () {
           votedMovies.add(movie);
@@ -98,17 +99,12 @@ class _VotePageState extends State<VotePage> {
             _currentIndex = 0;
             fetchData(url(page));
           }
-          //should switch go under the other code?
-          switch (voteResult?.match) {
-            case true:
-              var movieMatch = votedMovies
-                  .firstWhere((element) => element.id == voteResult?.movieId);
-              _displayBottomSheet(context, movieSessionProvider, movieMatch);
-              break;
-            case false:
-              break;
-            default:
-              break;
+          /////
+          print(votedMovies);
+          if (isMatch == true) {
+            var movieMatch = votedMovies
+                .firstWhere((element) => element.id == voteResult?.movieId);
+            _displayBottomSheet(context, movieSessionProvider, movieMatch);
           }
         },
       );
@@ -144,7 +140,6 @@ class _VotePageState extends State<VotePage> {
 //movie card
   Widget _movieCard(Movie movie) {
     var movieImage = imagePath(movie.posterPath);
-    print(imagePath(movie.backdropPath));
     return SizedBox(
       height: 500,
       child: Card(

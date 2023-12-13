@@ -5,12 +5,6 @@ import 'package:platform_device_id/platform_device_id.dart';
 import 'package:movie_night_app/data/models/session_api_model.dart';
 import 'package:movie_night_app/data/http_helper.dart';
 
-/*
-get allows for formatting
-set allows for validation
-we need: deviceId, code, sessionId, vote
-*/
-
 enum SessionType { host, guest, vote }
 
 class MovieSessionProvider extends ChangeNotifier {
@@ -30,6 +24,7 @@ class MovieSessionProvider extends ChangeNotifier {
   Future<void> userDeviceId() async {
     try {
       _deviceId = await PlatformDeviceId.getDeviceId;
+      print(_deviceId);
     } on Exception catch (_) {
       _deviceId = "Device id Not Found";
     }
@@ -42,10 +37,12 @@ class MovieSessionProvider extends ChangeNotifier {
     String baseUrl = 'https://movie-night-api.onrender.com';
     switch (sessionType) {
       case SessionType.host:
+        _guestSessionInfo = null; //TODO: DEBUG TEST
         movieNightUrl = '$baseUrl/start-session?device_id=$deviceId';
         await setSessionInfo(SessionType.host);
         break;
       case SessionType.guest:
+        _hostSessionInfo = null; //TODO: DEBUG TEST
         movieNightUrl = '$baseUrl/join-session?device_id=$deviceId&code=$code';
         await setSessionInfo(SessionType.guest);
         break;
@@ -77,9 +74,9 @@ class MovieSessionProvider extends ChangeNotifier {
             _guestSessionInfo = modeledData;
           }
           break;
-
         case SessionType.vote:
           VoteMatch modeledData = VoteMatch.fromJson(data);
+          print(data);
           _voteResult = modeledData;
           break;
       }

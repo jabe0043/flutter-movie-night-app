@@ -123,7 +123,7 @@ class JoinSessionFormState extends State<JoinSessionForm>
                 child: Column(
                   children: [
                     const Spacer(),
-                    Text("Enter your 4 digit code",
+                    Text("Enter your 4 digit code.",
                         style: Theme.of(context).textTheme.bodyLarge),
                     const Spacer(),
                     Row(
@@ -151,52 +151,55 @@ class JoinSessionFormState extends State<JoinSessionForm>
   }
 
   Widget buildTextFormField(int index) {
-    return Container(
-      height: 65,
-      width: 55,
-      child: TextFormField(
-        textAlignVertical: TextAlignVertical.top,
-        autofocus: true,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.onTertiary,
-          fontSize: 30,
-        ),
-        controller: controllers[index],
-        onChanged: (value) {
-          if (value.length == 1) {
-            FocusScope.of(context).nextFocus();
-          }
-        },
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return "Please enter a valid code";
-          }
-          return null;
-        },
-        onSaved: (value) {},
-        decoration: InputDecoration(
-          fillColor: Theme.of(context).colorScheme.onSurface,
-          filled: true,
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+    return Center(
+      child: Container(
+        height: 65,
+        width: 55,
+        child: TextFormField(
+          textAlignVertical: TextAlignVertical.top,
+          autofocus: true,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onTertiary,
+            fontSize: 30,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.onTertiary,
+          controller: controllers[index],
+          onChanged: (value) {
+            if (value.length == 1) {
+              FocusScope.of(context).nextFocus();
+            } else {
+              FocusScope.of(context).previousFocus(); //go back when erasing
+            }
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Please enter a valid code";
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            fillColor: Theme.of(context).colorScheme.onSurface,
+            filled: true,
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.onTertiary,
+              ),
+            ),
+            errorStyle: const TextStyle(
+              color: Colors.transparent,
+              fontSize: 0,
             ),
           ),
-          errorStyle: const TextStyle(
-            color: Colors.transparent,
-            fontSize: 0,
-          ),
+          keyboardType: TextInputType.number,
+          textAlign: TextAlign.center,
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(1),
+            FilteringTextInputFormatter.digitsOnly,
+          ],
         ),
-        keyboardType: TextInputType.number,
-        textAlign: TextAlign.center,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(1),
-          FilteringTextInputFormatter.digitsOnly,
-        ],
       ),
     );
   }
