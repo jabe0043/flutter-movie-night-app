@@ -150,7 +150,7 @@ class JoinSessionFormState extends State<JoinSessionForm>
 
   Widget buildTextFormField(int index) {
     return Center(
-      child: Container(
+      child: SizedBox(
         height: 65,
         width: 55,
         child: TextFormField(

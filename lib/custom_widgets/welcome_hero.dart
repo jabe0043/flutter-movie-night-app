@@ -11,62 +11,59 @@ final List<String> imgList = [
 ];
 
 class HeroBanner extends StatelessWidget {
+  const HeroBanner({super.key});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: CarouselSlider(
-        options: CarouselOptions(
-          autoPlay: true,
-          aspectRatio: 2.0,
-          enlargeCenterPage: true,
-          autoPlayInterval: const Duration(seconds: 3),
-          autoPlayAnimationDuration: const Duration(seconds: 3),
-        ),
-        items: imageSliders,
+    return CarouselSlider(
+      options: CarouselOptions(
+        autoPlay: true,
+        aspectRatio: 2.0,
+        enlargeCenterPage: true,
+        autoPlayInterval: const Duration(seconds: 3),
+        autoPlayAnimationDuration: const Duration(seconds: 3),
       ),
+      items: imageSliders,
     );
   }
 }
 
 final List<Widget> imageSliders = imgList
     .map(
-      (item) => Container(
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          child: Stack(
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  image: DecorationImage(
-                      fit: BoxFit.fill,
-                      colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.30), BlendMode.dstATop),
-                      image: NetworkImage(item)),
+      (item) => ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        child: Stack(
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.all(0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                    fit: BoxFit.fill,
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.30), BlendMode.dstATop),
+                    image: NetworkImage(item)),
+              ),
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFF121212),
+                    Color(0x11121212),
+                    Color(0x11121212),
+                    Color(0xFF121212)
+                    // Color(0xFF201B17),
+                    // Color(0x11201B17),
+                    // Color(0x11201B17),
+                    // Color(0xFF201B17),
+                  ],
+                  stops: [0, 0.4, 0.6, 1],
                 ),
               ),
-              Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFF121212),
-                      Color(0x11121212),
-                      Color(0x11121212),
-                      Color(0xFF121212)
-                      // Color(0xFF201B17),
-                      // Color(0x11201B17),
-                      // Color(0x11201B17),
-                      // Color(0xFF201B17),
-                    ],
-                    stops: [0, 0.4, 0.6, 1],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     )

@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 class GradientButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String btnText;
-  // final Color btnTextColor;
   final List<Color> gradientColors;
 
   const GradientButton({
+    super.key,
     required this.onPressed,
     required this.btnText,
-    // required this.btnTextColor,
     required this.gradientColors,
   });
 

@@ -30,7 +30,7 @@ class _WelcomePageState extends State<WelcomePage>
                 children: [
                   Transform.translate(
                     offset: const Offset(0, 80),
-                    child: HeroBanner(),
+                    child: const HeroBanner(),
                   ),
                   Container(
                     padding: const EdgeInsets.only(

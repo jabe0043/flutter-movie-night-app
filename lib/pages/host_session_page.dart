@@ -39,10 +39,10 @@ class _HostSessionPageState extends State<HostSessionPage> {
                 ),
                 child: Column(
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     Text("Share this code with your friend",
                         style: Theme.of(context).textTheme.bodyLarge),
-                    Spacer(),
+                    const Spacer(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: List.generate(
@@ -51,7 +51,7 @@ class _HostSessionPageState extends State<HostSessionPage> {
                             movieSessionProvider.hostSessionInfo!.code, index),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
               ),
