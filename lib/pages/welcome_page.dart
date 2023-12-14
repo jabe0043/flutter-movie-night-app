@@ -54,7 +54,7 @@ class _WelcomePageState extends State<WelcomePage>
                     await movieSessionProvider.setMovieNightUrl(
                         SessionType.host, null, null, null);
                   } catch (e) {
-                    print("error");
+                    return;
                   }
                   Navigator.pushNamed(context, '/host');
                 },

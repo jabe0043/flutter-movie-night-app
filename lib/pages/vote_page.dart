@@ -19,7 +19,7 @@ class _VotePageState extends State<VotePage> {
   final String baseUrl =
       "https://api.themoviedb.org/3/movie/now_playing?language=en-US";
   int page = 1;
-  late Future<List<Movie>> _movies; //20 movies in current rotation
+  late Future<List<Movie>>? _movies; //20 movies in current rotation
   List<Movie> votedMovies = []; //movies that have been voted on
   int _currentIndex = 0;
   String url(page) => "$baseUrl&api_key=$_apiKey&page=$page";
@@ -43,8 +43,7 @@ class _VotePageState extends State<VotePage> {
       });
       return movies;
     } catch (e) {
-      print("Error fetching data: $e");
-      return [];
+      throw Exception("Error loading data.");
     }
   }
 
@@ -63,13 +62,19 @@ class _VotePageState extends State<VotePage> {
               future: _movies,
               builder:
                   (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
-                if (snapshot.hasData) {
+                if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                   return _movieDismissible(
                     movieSessionProvider,
                     snapshot.data![_currentIndex],
                   );
+                } else if (snapshot.hasError) {
+                  //if error
+                  return const Center(
+                    child: Text("Error: Failed to load data."),
+                  );
                 } else {
                   return Center(
+                    //if loading
                     child: CircularProgressIndicator(
                       color: Theme.of(context).colorScheme.tertiary,
                     ),
