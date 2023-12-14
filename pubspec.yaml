@@ -23,15 +23,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-    
-
-
-  # http: ^1.1.0
 
   flutter_lints: ^2.0.0
 
 flutter:
   uses-material-design: true
+  assets:
+  - assets/default_poster.jpg
 
   fonts:
     - family: PlusJakartaSans

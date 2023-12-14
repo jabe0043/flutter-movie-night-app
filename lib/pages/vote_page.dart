@@ -96,11 +96,9 @@ class _VotePageState extends State<VotePage> {
           votedMovies.add(movie);
           _currentIndex++;
           if (_currentIndex % 20 == 0) {
-            _currentIndex = 0;
             fetchData(url(page));
+            _currentIndex = 0;
           }
-          /////
-          print(votedMovies);
           if (isMatch == true) {
             var movieMatch = votedMovies
                 .firstWhere((element) => element.id == voteResult?.movieId);
@@ -147,13 +145,20 @@ class _VotePageState extends State<VotePage> {
         clipBehavior: Clip.hardEdge,
         child: Stack(
           children: [
-            FadeInImage.memoryNetwork(
-                placeholder: kTransparentImage,
-                fadeInDuration: 250.ms,
-                fadeInCurve: Curves.easeIn,
-                image: imagePath(movieImage),
-                width: 500,
-                fit: BoxFit.cover),
+            movie.posterPath != null
+                ? FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    fadeInDuration: 250.ms,
+                    fadeInCurve: Curves.easeIn,
+                    image: movieImage,
+                    width: 500,
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset(
+                    'assets/default_poster.jpg',
+                    width: 500,
+                    fit: BoxFit.cover,
+                  ),
             Container(
               //gradient overlay
               height: 500,
@@ -200,7 +205,7 @@ class _VotePageState extends State<VotePage> {
                     color: Theme.of(context).colorScheme.onPrimary,
                     borderRadius: BorderRadius.circular(20)),
                 child: Text(
-                  movie.voteAverage.toStringAsFixed(1).toString(),
+                  movie.voteAverage.toStringAsFixed(1),
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground),
                 ),
@@ -300,11 +305,17 @@ class _VotePageState extends State<VotePage> {
                       padding: const EdgeInsets.only(right: 16),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          imagePath(movie.posterPath),
-                          fit: BoxFit.fitWidth,
-                          height: 220,
-                        ),
+                        child: movie.posterPath != null
+                            ? Image.network(
+                                imagePath(movie.posterPath),
+                                fit: BoxFit.fitWidth,
+                                height: 220,
+                              )
+                            : Image.asset(
+                                'assets/default_poster.jpg',
+                                width: 500,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     ),
                     Expanded(
@@ -358,10 +369,6 @@ class _VotePageState extends State<VotePage> {
             end: Offset(7, 7),
             curve: Curves.ease,
           ),
-          ShimmerEffect(
-              duration: Duration(milliseconds: 600),
-              color: Colors.red,
-              curve: Curves.easeOut),
         ],
         child: Icon(
           Icons.favorite_rounded,

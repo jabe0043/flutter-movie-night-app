@@ -99,10 +99,10 @@ class AnimatedGradientBtn extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AnimatedGradientBtnState createState() => _AnimatedGradientBtnState();
+  AnimatedGradientBtnState createState() => AnimatedGradientBtnState();
 }
 
-class _AnimatedGradientBtnState extends State<AnimatedGradientBtn>
+class AnimatedGradientBtnState extends State<AnimatedGradientBtn>
     with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Alignment> _bottomAlignmentAnimation;
