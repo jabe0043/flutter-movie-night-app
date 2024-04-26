@@ -15,14 +15,14 @@ ReelSync is a mobile application designed for two people to collaboratively sele
 - Generates a code to share with another user.
 - Makes an HTTP call to the MovieNight API's /start-session endpoint.
 - Saves session ID for future reference.
-![ReelSync Share Vote Session Code Screen](./assets/reelSync-shareCode.png "ReelSync Share Vote Session Code Screen")
+<img src="./assets/reelSync-shareCode.png" alt="ReelSync Share Vote Session Code Screen" height="300">
 
 
 ### Enter Code Screen
 - Allows users to enter a shared code.
 - Makes an HTTP call to the MovieNight API's /join-session endpoint.
 - Handles errors gracefully.
-![ReelSync Join Vote Session Code Screen](./assets/reelSync-joinCode.png "ReelSync Join Vote Session Code Screen")
+<img src="./assets/reelSync-joinCode.png" alt="ReelSync Join Vote Session Code Screen" height="300">
 
 
 ### Movie Selection Screen
