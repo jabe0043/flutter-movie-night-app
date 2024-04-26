@@ -40,34 +40,33 @@ ReelSync is a mobile application designed for two people to collaboratively sele
 
 ## Functionality
 
-### Welcome Screen Requirements
+### Welcome Screen
 - Utilizes device ID package to retrieve unique device ID.
 - Allows users to start or join a session.
 
-### Share Code Screen Requirements
+### Share Code Screen
 - Generates a code to share with another user.
 - Saves session ID for future reference.
 - Navigates to Movie Selection Screen.
 
-### Enter Code Screen Requirements
+### Enter Code Screen
 - Allows users to enter a shared code.
-- Handles errors gracefully.
+- Handles errors in case of invalid session code.
 - Navigates to Movie Selection Screen upon successful code submission.
 
-### Movie Selection Screen Requirements
+### Movie Selection Screen
 - Fetches movies from The Movie DB API.
 - Displays movie details and allows swiping to indicate preferences.
 - Makes HTTP calls to MovieNight API for each vote.
 - Notifies users of matches with partner.
 - Handles loading of additional movies from TMDB API.
 
-### HTTP and Data Requirements
+### HTTP and Data
 - Implements an HttpHelper class for API calls.
-- Saves device ID and session ID using SharedPreferences, ChangeNotifierProvider, or JSON file.
+- Saves device ID and session ID using SharedPreferences (device local storage).
 
-### Design Requirements
+### Design Considerations
 - Unique launcher icon and splash screen.
-- Ensures text readability and accessibility.
-- Consistent spacing using base number.
-- Utilizes a single Google Font for text.
-- Defines ColorScheme and TextTheme in MaterialApp theme property.
+- Accessible text readability and color palette.
+- Standardized spacing (padding/margin) using base number.
+- Using MaterialApp for defining ColorScheme and TextTheme.
