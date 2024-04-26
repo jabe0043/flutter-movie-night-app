@@ -9,8 +9,7 @@ ReelSync is a mobile application designed for two people to collaboratively sele
 - Users choose to start a session or join an existing one.
 - Utilizes platform_device_id package to retrieve device ID.
 - Options to get a code to share or enter a shared code.
-![ReelSync Home Screen](./assets/reelSync-home.png "ReelSync Home Screen")
-
+<img src="./assets/reelSync-home.png" alt="ReelSync Home Screen" height="300">
 
 ### Share Code Screen
 - Generates a code to share with another user.
